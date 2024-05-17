@@ -81,7 +81,7 @@ class Home : ComponentActivity() {
                     contentDescription = "tHIS IS A An IMAGE",
                     modifier = Modifier
                         .size(150.dp)
-                        .clickable {navigateToPage(chatroom::class.java)}
+                        .clickable { navigateToPage(chatroom::class.java) }
                 )
 
                 Image(
@@ -123,17 +123,30 @@ class Home : ComponentActivity() {
             NavigationBarItem(
                 selected = true,
                 onClick = { /*TODO*/ },
-                icon = {  },
+                icon = { Icon(painter = painterResource(id = R.drawable.ic_home_black_24dp), contentDescription = null) },
                 label = {Text(text = "Home")}
                 )
 
             NavigationBarItem(
                 selected = false,
                 onClick = { /*TODO*/ },
-                icon = {  },
+                icon = { Icon(painter = painterResource(id = com.google.android.material.R.drawable.ic_search_black_24), contentDescription = null) },
                 label = {Text(text = "Search")}
             )
 
+            NavigationBarItem(
+                selected = false,
+                onClick = { /*TODO*/ },
+                icon = {  Icon(painter = painterResource(id = androidx.core.R.drawable.ic_call_answer), contentDescription = null) },
+                label = {Text(text = "Counseling")}
+            )
+
+            NavigationBarItem(
+                selected = false,
+                onClick = { /*TODO*/ },
+                icon = { Icon(painter = painterResource(id = R.drawable.ic_dashboard_black_24dp), contentDescription = null) },
+                label = {Text(text = "Profile")}
+            )
         }
 
         }
