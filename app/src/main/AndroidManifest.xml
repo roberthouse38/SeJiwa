@@ -13,9 +13,8 @@
         android:theme="@style/Theme.SeJiwa"
         tools:targetApi="31">
         <activity
-            android:name=".diaryActivity"
-            android:exported="false"
-            android:label="@string/title_activity_diary" />
+            android:name=".chatroom"
+            android:exported="false" />
         <activity
             android:name=".Home"
             android:exported="false" />

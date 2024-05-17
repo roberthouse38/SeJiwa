@@ -1,5 +1,6 @@
 package com.example.sejiwa
 
+import android.content.Intent
 import android.graphics.drawable.Icon
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -63,11 +64,10 @@ class Home : ComponentActivity() {
             Text(
                 text = "Selamat Datang User",
                 fontWeight = FontWeight.Bold,
-                fontStyle = FontStyle(2)
+                fontStyle = FontStyle(3)
             )
 
             Spacer(modifier = Modifier.height(5.dp)) //Jarak Aja
-
 
             Row(
                 modifier = Modifier
@@ -81,7 +81,7 @@ class Home : ComponentActivity() {
                     contentDescription = "tHIS IS A An IMAGE",
                     modifier = Modifier
                         .size(150.dp)
-                        .clickable { }
+                        .clickable {navigateToPage(chatroom::class.java)}
                 )
 
                 Image(
@@ -98,7 +98,6 @@ class Home : ComponentActivity() {
                     .fillMaxWidth()
                     .padding(30.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
-
 
                 ) {
                 Image(
@@ -124,9 +123,28 @@ class Home : ComponentActivity() {
             NavigationBarItem(
                 selected = true,
                 onClick = { /*TODO*/ },
-                icon = {  })
+                icon = {  },
+                label = {Text(text = "Home")}
+                )
+
+            NavigationBarItem(
+                selected = false,
+                onClick = { /*TODO*/ },
+                icon = {  },
+                label = {Text(text = "Search")}
+            )
+
         }
+
         }
+
+    private fun navigateToPage(java: Class<chatroom>) {
+        val intent = Intent(this, java)
+        startActivity(intent)
     }
+
+
+}
+
 
 
