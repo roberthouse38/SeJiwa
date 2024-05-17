@@ -3,24 +3,14 @@ package com.example.sejiwa
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -33,149 +23,148 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.sejiwa.ui.theme.SeJiwaTheme
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
 
-private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
         }
 
+        // Ininisialisasi Autentikasi Dari Firebase
+        // (google-services.json ditambahkan ke direktori app)
+        firebaseAuth = FirebaseAuth.getInstance()
+
         setContent {
             loginscreen()
         }
     }
 
-        @Composable
-        fun loginscreen() {
+    @Composable
+    fun loginscreen() {
 
-            var email by remember { mutableStateOf("") }
+        var email by remember { mutableStateOf("") }
+        var password by remember { mutableStateOf("") }
 
-            var password by remember { mutableStateOf("") }
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            //Gambar Atas
+            Image(
+                painter = painterResource(id = R.drawable.signin_page),
+                contentDescription = "login image",
+                modifier = Modifier.height(200.dp)
+            )
 
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+            //Kata Sambutan
+            Text(
+                text = "Welcome Back",
+                fontWeight = FontWeight.Bold,
+                fontSize = 35.sp
+            )
 
+            Spacer(modifier = Modifier.height(5.dp)) //Jarak Aja
+
+            //Kalimat Login
+            Text(
+                text = "Login To Your Account",
+                fontWeight = FontWeight.Light,
+                fontSize = 15.sp
+            )
+
+            Spacer(modifier = Modifier.height(20.dp)) //Jarak lg
+
+            //Tempat Input Email/Username
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text(text = "Username/Email") }
+            )
+
+            Spacer(modifier = Modifier.height(10.dp)) //Jarak
+
+            //Tempat Input Password
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text(text = "Password") },
+                visualTransformation = PasswordVisualTransformation()
+            )
+
+            Spacer(modifier = Modifier.height(20.dp)) //Jarak
+
+            //Tombol Login
+            Button(onClick = {
+                signInWithEmailAndPassword(email, password)
+            }) {
+                Text(text = "Sign In")
+            }
+
+            Spacer(modifier = Modifier.height(20.dp)) //Jarak
+
+            //Tombol lupa Input Data Password
+            TextButton(onClick = { /*TODO*/ }) {
+                Text(text = "Forget Password?")
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(text = "Or Continue With", modifier = Modifier.clickable { })
+
+            //Untuk Mengatur Logo
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(30.dp),
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
-                //Gambar Atas
                 Image(
-                    painter = painterResource(id = R.drawable.signin_page),
-                    contentDescription = "login image",
-                    modifier = Modifier.height(200.dp)
-                )
-
-                //Kata Sambutan
-                Text(
-                    text = "Welcome Back",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 35.sp
-                )
-
-                Spacer(modifier = Modifier.height(5.dp)) //Jarak Aja
-
-                //Kalimat Login
-                Text(
-                    text = "Login To Your Account",
-                    fontWeight = FontWeight.Light,
-                    fontSize = 15.sp
-                )
-
-                Spacer(modifier = Modifier.height(20.dp)) //Jarak lg
-
-                //Tempat Input Email/Username
-                OutlinedTextField(value = email,
-                    onValueChange = { email = it },
-                    label = { Text(text = "Username/Email") })
-
-                Spacer(modifier = Modifier.height(10.dp)) //Jarak
-
-                //Tempat Input Password
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text(text = "Password") },
-                    visualTransformation = PasswordVisualTransformation()
-                )
-
-                Spacer(modifier = Modifier.height(20.dp)) //Jarak
-
-                //Tombol Login
-                Button(onClick =
-                {
-                    Log.i("Credential", "email = $email password = $password")
-                    val intent = Intent(this@MainActivity, Home::class.java)
-                    startActivity(intent)
-                    /*firebaseAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                Log.d("FirebaseAuth", "signInWithEmail:success")
-                                val intent = Intent(this@MainActivity, Home::class.java)
-                                startActivity(intent)
-                            } else {
-                                Log.w("FirebaseAuth","signInWithEmail:failure",task.exception)
-                                Toast.makeText(context, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    */
-
-
-
-                }) {
-                    Text(text = "Sign In")
-                }
-
-                Spacer(modifier = Modifier.height(20.dp)) //Jarak
-
-                //Tombol lupa Input Data Password
-                TextButton(onClick = { /*TODO*/ }) {
-                    Text(text = "Forget Password?")
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-                Text(text = "Or Continue With", modifier = Modifier.clickable { })
-
-                //Untuk Mengatur Logo
-                Row(
+                    painter = painterResource(id = R.drawable.facbook),
+                    contentDescription = "Logo Facebook",
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(30.dp),
-                    horizontalArrangement = Arrangement.SpaceAround
+                        .size(40.dp)
+                        .clickable {
+                            //facebookclicked
+                        }
+                )
 
-                ) {
-                    Image(painter = painterResource(id = R.drawable.facbook),
-                        contentDescription = "Logo Facebook",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clickable {
-                                //facebookclicked
-                            }
-                    )
-
-                    Image(painter = painterResource(id = R.drawable.google_logo),
-                        contentDescription = "Logo Google",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clickable {
-                                //google logo
-                            }
-                    )
-                }
-                //Untuk Mengatur Logo
-
+                Image(
+                    painter = painterResource(id = R.drawable.google_logo),
+                    contentDescription = "Logo Google",
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clickable {
+                            //google logo
+                        }
+                )
             }
         }
     }
 
-
-
+    private fun signInWithEmailAndPassword(email: String, password: String) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, navigate to Home
+                    Log.d("FirebaseAuth", "signInWithEmail:success")
+                    val intent = Intent(this, Home::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("FirebaseAuth", "signInWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        this, "Authentication failed: ${task.exception?.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+    }
+}

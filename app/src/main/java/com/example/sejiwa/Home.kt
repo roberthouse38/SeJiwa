@@ -26,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.google.firebase.firestore.auth.User
+
 
 class Home : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
